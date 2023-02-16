@@ -3,6 +3,9 @@ import React, { useState } from "react";
 
 const Mintnft = () => {
   const imageUrl = localStorage.getItem("imageUrl");
+  const [property, setProperty] = useState("");
+  const [value, setValue] = useState("");
+  const [inputForm, setInputform] = useState([]);
   // console.log(imageUrl);
 
   const [formData, setFormData] = useState({
@@ -14,7 +17,11 @@ const Mintnft = () => {
     image: `ipfs://${imageUrl}`,
     mediaUrl: `ipfs://${imageUrl}`,
     mimeType: "image/png",
+    properties: {},
   });
+  
+    
+  
 
   function handleInputChange(event) {
     const { name, value } = event.target;
@@ -24,51 +31,61 @@ const Mintnft = () => {
     }));
   }
 
-  const handlePropertyInputChange = (event, index) => {
+  // code for property and value
+  const handlePropertyInputChange = (event) => {
     const { name, value } = event.target;
-    const properties = [...formData.properties];
-    properties[index][name] = value;
-    setFormData({ ...formData, properties });
+    if (name === "property") {
+      setProperty(value);
+    }
+    if (name === "value") {
+      setValue(value);
+    }
+    // setProperty(name);
+    // setValue(value);
+    console.log(event.target.value);
+    console.log("name : ", name);
+    console.log("value : ", value);
   };
 
-  const handleAddPropertyInput = () => {
-    const newProperty = { property: "", value: "" };
-    setFormData({
-      ...formData,
-      properties: [...formData.properties, newProperty],
-    });
-  };
-  const handleDeleteProperty = (propertyIndex) => {
-    setFormData((prevFormData) => {
-      const newProperties = [...prevFormData.properties];
-      newProperties.splice(propertyIndex, 1);
-      return {
-        ...prevFormData,
-        properties: newProperties,
-      };
-    });
-  };
+  const newForm = (
+    <div>
+      <label>Property:</label>
+      <input type="text" name="property" onChange={handlePropertyInputChange} />
+      <label>Value:</label>
+      <input type="text" name="value" onChange={handlePropertyInputChange} />
+    </div>
+  );
+
+  const handleAdd = () =>{
+    setInputform([...inputForm, newForm])
+  }
 
   async function handleFormSubmit(event) {
     event.preventDefault();
-    let convertedFormdata = JSON.stringify(formData);
-    console.log(convertedFormdata);
-    try {
-      const response = await axios.post(
-        `https://bs-dev.api.onnftverse.com/v1/external/nft/mint`,
-        convertedFormdata,
-        {
-          headers: {
-            "X-App-Token": 123,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      console.log(response.data);
-    } catch (error) {
-      console.error(error);
-      throw new Error("Failed to mint NFT");
-    }
+    let newFormData = { properties: { ...formData.properties } };
+    newFormData.properties[property] = value;
+
+    setFormData({ ...formData, properties: { ...newFormData.properties } });
+    console.log(formData.properties);
+
+    // let convertedFormdata = JSON.stringify(formData);
+    // console.log(convertedFormdata);
+    // try {
+    //   const response = await axios.post(
+    //     `https://bs-dev.api.onnftverse.com/v1/external/nft/mint`,
+    //     convertedFormdata,
+    //     {
+    //       headers: {
+    //         "X-App-Token": 123,
+    //         "Content-Type": "application/json",
+    //       },
+    //     }
+    //   );
+    //   console.log(response.data);
+    // } catch (error) {
+    //   console.error(error);
+    //   throw new Error("Failed to mint NFT");
+    // }
   }
 
   return (
@@ -106,32 +123,32 @@ const Mintnft = () => {
           onChange={handleInputChange}
         />
         <br />
-        {/* {formData.properties.map((property, index) => (
-          <div key={index}>
-            <label htmlFor={`property-${index}`}>Property:</label>
-            <input
-              type="text"
-              name="property"
-              value={property.property}
-              onChange={(event) => handlePropertyInputChange(event, index)}
-            />
-            <label htmlFor={`value-${index}`}>Value:</label>
-            <input
-              type="text"
-              name="value"
-              value={property.value}
-              onChange={(event) => handlePropertyInputChange(event, index)}
-            />
-            <button type="button" onClick={() => handleDeleteProperty(index)}>
-              Delete
-            </button>
-          </div>
-        ))}
-        <button type="button" onClick={handleAddPropertyInput}>
-          Add Property
-        </button> */}
+        <div>
+          <label>Property:</label>
+          <input
+            type="text"
+            name="property"
+            onChange={handlePropertyInputChange}
+          />
+          <label>Value:</label>
+          <input
+            type="text"
+            name="value"
+            onChange={handlePropertyInputChange}
+          />
+        </div>
+
+        {inputForm.map((singleForm) => singleForm)}
+
         <br />
+        <button onClick={handleAdd}>Add property</button>
         <button type="submit">Submit</button>
+
+        <p>
+          {Object.keys(formData).length > 0
+            ? JSON.stringify(formData)
+            : "no object"}
+        </p>
       </form>
       {/* right side */}
       <div>
