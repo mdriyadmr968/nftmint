@@ -19,9 +19,6 @@ const Mintnft = () => {
     mimeType: "image/png",
     properties: {},
   });
-  
-    
-  
 
   function handleInputChange(event) {
     const { name, value } = event.target;
@@ -56,9 +53,21 @@ const Mintnft = () => {
     </div>
   );
 
-  const handleAdd = () =>{
-    setInputform([...inputForm, newForm])
-  }
+  const handleAdd = () => {
+    setInputform([
+      ...inputForm,
+      <div key={inputForm.length}>
+        <label>Property:</label>
+        <input
+          type="text"
+          name="property"
+          onChange={handlePropertyInputChange}
+        />
+        <label>Value:</label>
+        <input type="text" name="value" onChange={handlePropertyInputChange} />
+      </div>,
+    ]);
+  };
 
   async function handleFormSubmit(event) {
     event.preventDefault();
@@ -68,24 +77,24 @@ const Mintnft = () => {
     setFormData({ ...formData, properties: { ...newFormData.properties } });
     console.log(formData.properties);
 
-    // let convertedFormdata = JSON.stringify(formData);
-    // console.log(convertedFormdata);
-    // try {
-    //   const response = await axios.post(
-    //     `https://bs-dev.api.onnftverse.com/v1/external/nft/mint`,
-    //     convertedFormdata,
-    //     {
-    //       headers: {
-    //         "X-App-Token": 123,
-    //         "Content-Type": "application/json",
-    //       },
-    //     }
-    //   );
-    //   console.log(response.data);
-    // } catch (error) {
-    //   console.error(error);
-    //   throw new Error("Failed to mint NFT");
-    // }
+    let convertedFormdata = JSON.stringify(formData);
+    console.log(convertedFormdata);
+    try {
+      const response = await axios.post(
+        `https://bs-dev.api.onnftverse.com/v1/external/nft/mint`,
+        convertedFormdata,
+        {
+          headers: {
+            "X-App-Token": 123,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(response.data);
+    } catch (error) {
+      console.error(error);
+      throw new Error("Failed to mint NFT");
+    }
   }
 
   return (
@@ -123,20 +132,22 @@ const Mintnft = () => {
           onChange={handleInputChange}
         />
         <br />
-        <div>
+        {/* <div>
           <label>Property:</label>
           <input
             type="text"
             name="property"
             onChange={handlePropertyInputChange}
+            onBlur={handleInputChange}
           />
           <label>Value:</label>
           <input
             type="text"
             name="value"
             onChange={handlePropertyInputChange}
+            onBlur={handleInputChange}
           />
-        </div>
+        </div> */}
 
         {inputForm.map((singleForm) => singleForm)}
 
