@@ -39,32 +39,38 @@ const Mintnft = () => {
     }
     // setProperty(name);
     // setValue(value);
-    console.log(event.target.value);
-    console.log("name : ", name);
-    console.log("value : ", value);
+    // console.log(event.target.value);
+    // console.log("name : ", name);
+    // console.log("value : ", value);
   };
 
-  const newForm = (
-    <div>
-      <label>Property:</label>
-      <input type="text" name="property" onChange={handlePropertyInputChange} />
-      <label>Value:</label>
-      <input type="text" name="value" onChange={handlePropertyInputChange} />
-    </div>
-  );
+  // const newForm = (
+  //   <div>
+  //     <label>Property:</label>
+  //     <input type="text" name="property" onChange={handlePropertyInputChange} />
+  //     <label>Value:</label>
+  //     <input type="text" name="value" onChange={handlePropertyInputChange} />
+  //   </div>
+  // );
 
   const handleAdd = () => {
     setInputform([
       ...inputForm,
-      <div key={inputForm.length}>
-        <label>Property:</label>
+      <div key={inputForm.length} className="mt-5 flex gap-7">
         <input
           type="text"
           name="property"
+          placeholder="Property"
           onChange={handlePropertyInputChange}
+          className="w-1/2 rounded  bg-slate-800 border-2 border-gray-500 rounded"
         />
-        <label>Value:</label>
-        <input type="text" name="value" onChange={handlePropertyInputChange} />
+        <input
+          type="text"
+          name="value"
+          onChange={handlePropertyInputChange}
+          placeholder="Value"
+          className="w-1/2 h-10 rounded  bg-slate-800 border-2 border-gray-500 rounded"
+        />
       </div>,
     ]);
   };
@@ -75,7 +81,7 @@ const Mintnft = () => {
     newFormData.properties[property] = value;
 
     setFormData({ ...formData, properties: { ...newFormData.properties } });
-    console.log(formData.properties);
+    // console.log(formData.properties);
 
     let convertedFormdata = JSON.stringify(formData);
     console.log(convertedFormdata);
@@ -98,82 +104,96 @@ const Mintnft = () => {
   }
 
   return (
-    <div>
-      <form onSubmit={handleFormSubmit}>
-        <label htmlFor="name">Standard</label>
-        <input
-          type="text"
-          name="standard"
-          value="arc69"
-          onChange={handleInputChange}
-        />
+    <div class="flex justify-between bg-slate-800 text-white w-3/4 m-auto">
+      <form onSubmit={handleFormSubmit} class="w-1/2 p-4">
+        <div class="flex justify-between">
+          <label htmlFor="name" class="">
+            NFT Details
+          </label>
+          <input
+            type="text"
+            name="standard"
+            value="arc69"
+            onChange={handleInputChange}
+            className="block bg-slate-800 border-2 border-gray-500 rounded"
+          />
+        </div>
         <br />
-        <label htmlFor="name">Name:</label>
+        <label htmlFor="name" class="">
+          Name
+        </label>
         <input
           type="text"
           name="name"
           value={formData.name}
           onChange={handleInputChange}
+          className="block w-full  bg-slate-800 border-2 border-gray-500 rounded"
         />
         <br />
-        <label htmlFor="description">Description:</label>
+        <label htmlFor="description" class="">
+          Description
+        </label>
         <input
           type="text"
           name="description"
           value={formData.description}
           onChange={handleInputChange}
+          className="block w-full  bg-slate-800 border-2 border-gray-500 rounded"
         />
         <br />
-        <label htmlFor="collectionName">Collection Name:</label>
+        <label htmlFor="collectionName" class="">
+          Collection Name
+        </label>
         <input
           type="text"
           name="collectionName"
           value={formData.collectionName}
           onChange={handleInputChange}
+          className="block w-full  bg-slate-800 border-2 border-gray-500 rounded"
         />
         <br />
-        {/* <div>
-          <label>Property:</label>
-          <input
-            type="text"
-            name="property"
-            onChange={handlePropertyInputChange}
-            onBlur={handleInputChange}
-          />
-          <label>Value:</label>
-          <input
-            type="text"
-            name="value"
-            onChange={handlePropertyInputChange}
-            onBlur={handleInputChange}
-          />
-        </div> */}
-
         {inputForm.map((singleForm) => singleForm)}
-
         <br />
-        <button onClick={handleAdd}>Add property</button>
-        <button type="submit">Submit</button>
-
-        <p>
+        <button
+          onClick={handleAdd}
+          className="bg-violet-700 text-white font-bold py-2 px-4 rounded"
+        >
+          Add property
+        </button>
+        <br />
+        <button
+          type="submit"
+          className="bg-violet-700 text-white font-bold py-2 mt-5 mx-auto px-4 rounded"
+        >
+          Submit
+        </button>
+        {/* <p class="mt-4">
           {Object.keys(formData).length > 0
             ? JSON.stringify(formData)
             : "no object"}
-        </p>
+        </p> */}
       </form>
       {/* right side */}
-      <div>
-        <h1>preview your nft</h1>
+      <div class="w-1/3 mx-auto p-4 ">
+        <h1 class="text-2xl font-bold mb-4">Preview your NFT</h1>
         {imageUrl && (
           <div>
             <img
               src={`https://ipfs.io/ipfs/${imageUrl}`}
               alt="Uploaded image"
+              className="w-60 mx-auto"
             />
           </div>
         )}
-        <h4>Your IPFS hash</h4>
-        <input type="text" value={imageUrl} />
+        <h4 class=" mt-4">Your IPFS hash</h4>
+        <input
+          type="text"
+          value={imageUrl}
+          className="block w-full  bg-slate-800 border-2 border-gray-500 rounded"
+        />
+        <button className="w-full bg-violet-700 text-white font-bold py-2 mt-5 px-4 rounded">
+          View ipfs hash
+        </button>
       </div>
     </div>
   );
